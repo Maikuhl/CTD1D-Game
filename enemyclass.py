@@ -15,7 +15,7 @@ class Snail():
     self.moveset = []
     self.conditions = {}
     self.powerlevel = stats[2]
-    self.coins = stats[2]
+    self.coins = stats[2]*4
     self.set_moveset()
     
   def set_moveset(self):
@@ -60,7 +60,7 @@ class Snail():
 
   
 
-snails = {'snailcultist': Snail(['Snail Cultist', 5, 1, 'snailcultist']), 'spikesnail': Snail(['Spike Snail', 30, 2, 'spikesnail']), 'acidsnail': Snail(['Acid Snail', 30, 2, 'acidsnail']), 'hardshellsnail': Snail(['Hard Shell Snail', 40, 3, 'hardshellsnail']), 'snailarchon': Snail(['Snail Archon', 150, 9, 'snailarchon'])}
+snails = {'snailcultist': Snail(['Snail Cultist', 28, 1, 'snailcultist']), 'spikesnail': Snail(['Spike Snail', 30, 2, 'spikesnail']), 'acidsnail': Snail(['Acid Snail', 30, 2, 'acidsnail']), 'hardshellsnail': Snail(['Hard Shell Snail', 40, 3, 'hardshellsnail']), 'snailarchon': Snail(['Snail Archon', 150, 9, 'snailarchon'])}
 
 
 snail_list = list(snails.keys())

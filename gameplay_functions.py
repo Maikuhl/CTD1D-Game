@@ -5,6 +5,7 @@ from terminalprints import *
 from time import sleep
 from copy import *
 from ASCII_Art import *
+from story import *
 import random
 
 def choose_class():
@@ -108,10 +109,11 @@ def choose_card_reward(player):
       break
 
 def shop(player):
-  card = list(class_cards[player.cls])
-  card_list = []
+  cards = list(class_cards[player.cls])
+  card_list = {}
   for i in range(8):
-    card_list.append(card[randint(0, len(card)-1)])
+    random_card = cards[randint(0, len(cards)-1)]
+    card_list[random_card] = get_card_object(player, random_card).price
   while True:
     print("Welcome to the shop, what would you like to buy?")
     print("[Cards/Health/Mana]")
@@ -139,7 +141,7 @@ def shop(player):
       if cmd1 not in ['yes', 'no']:
         print("say what")
       elif cmd1 == "yes":
-        break
+        pass
       else:
         return
     elif cmd == 'health':
@@ -155,13 +157,14 @@ def shop(player):
           else:
             player.coins -= choice
             player.maxhp += choice
+            print("your max hp increased by {}".format(choice))
             break
       print("Continue shopping? [Yes, No]")
       cmd1 = input().lower()
       if cmd1 not in ['yes', 'no']:
         print("say what")
       elif cmd1 == "yes":
-        break
+        pass
       else:
         return
     else:
@@ -177,13 +180,14 @@ def shop(player):
           else:
             player.coins -= choice*5
             player.maxmana += choice
+            print("your max mana increased by {}".format(choice))
             break
       print("Continue shopping? [Yes, No]")
       cmd1 = input().lower()
       if cmd1 not in ['yes', 'no']:
         print("say what")
       elif cmd1 == "yes":
-        break
+        pass
       else:
         return        
 
@@ -357,7 +361,6 @@ def card_play(actor, enemy_list, card):
   else:
     add_block(actor, card_obj)
     actor.add_conditions(card_obj)
-    apply_conditions(actor)
     actor.discard_card(card)
     
 def card_played(actor, enemy, card):
@@ -462,7 +465,7 @@ def add_block(actor, card_obj):
   actor.block += card_obj.block
   print("added {} to {}'s' block".format(card_obj.block, actor.name))
   sleep(0.5)
-  print("{} now has {} block".format(actor.name, card_obj.block))
+  print("{} now has {} block".format(actor.name, actor.block))
   sleep(0.5)
   return
 
@@ -490,3 +493,16 @@ def death():
     return start_game()
   elif choice == 'no':
     return main()
+
+def start_game():
+  player = choose_class()
+  player.name = input("What is your name adventurer?\n")
+  player.start_deck()
+  stage_count = 1
+  while True:
+    if stage_count < 10 and stage_count % 2 == 1:
+      story_list[stage_count // 2]()
+    stage_count += choose_stage(player, stage_count)
+    print(stage_divider)
+    print("You move on to the next stage")
+    print(stage_divider)

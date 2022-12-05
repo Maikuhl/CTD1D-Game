@@ -12,3 +12,5 @@ def Chapter_04():
 
 def Chapter_05():
     print("You have aggravated the Snail God. Fight against the snail and travel back home.")
+
+story_list = [Chapter_01, Chapter_02, Chapter_03, Chapter_04, Chapter_05]

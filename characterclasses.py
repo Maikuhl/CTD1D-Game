@@ -114,12 +114,11 @@ class Character():
 
   def add_conditions(self, card_obj):
     for condition, tags in card_obj.effectandtags.items():
-      if tags['condition'] == True:
-        if condition not in self.conditions.keys():
-          self.conditions[condition] = tags['turns']
-        else:
-          self.conditions[condition] += tags['turns']
-        return
+      if condition not in self.conditions.keys():
+        self.conditions[condition] = tags['turns']
+      else:
+        self.conditions[condition] += tags['turns']
+      return
 
     
-classes = {'tank': Character(['Tank', 80, 3, 'Burning Blood']), 'mage': Character(['Mage', 72, 3, 'Pure Water']), 'rogue': Character(['Rogue', 70, 3, 'Ring of the Snake'])}
+classes = {'tank': Character(['Tank', 80, 3, 'Burning Blood']), 'mage': Character(['Mage', 72, 4, 'Pure Water']), 'rogue': Character(['Rogue', 70, 3, 'Ring of the Snake'])}

@@ -84,15 +84,15 @@ class Card():
     return type_list
 
 
-effectdict = {'all': ['all enemy receive damage', {'condition': False, 'turns': 0}],
+effectdict = {'all': ['all enemies receive damage', {'condition': False, 'turns': 0}],
              'flex': ['player deals 1 extra damage', {'condition': True, 'turns': 1}],
              'twice': ['player deals 200% damage', {'condition': False, 'turns': 0}],
              'calm': ['player receives 50% damage', {'condition': True, 'turns': 3}],
-             'wrath': ['player deals 200% damage, receives 200% damage', {'condition': True, 'turns': 3}],
-             'exit stance': ['player deals 100% damage, receives 100% damage', {'condition': True, 'turns': 0}],
+             'wrath': ['player deals 200% damage, player receives 200% damage', {'condition': True, 'turns': 3}],
+             'exit stance': ['player deals 100% damage, player receives 100% damage', {'condition': True, 'turns': 0}],
              'vulnerable': ['enemy receives 150% damage', {'condition': True, 'turns': 2}],
              'weak': ['enemy deals 50% damage', {'condition': True, 'turns': 2}],
-             'drain': ['player receives 3 damage, gains 2 mana', {'condition': False, 'turns': 0}],
+             'drain': ['player receives 3 damage, player gains 2 mana', {'condition': False, 'turns': 0}],
              'poison': ['enemy receives 3 damage for 5 turns', {'condition': True, 'turns': 5}],
              'gain mana': ['player gains 1 mana', {'condition': False, 'turns': 0}],
              'copy': ['player copy 1 card', {'condition': False, 'turns': 0}],
@@ -124,9 +124,9 @@ magecardsdict = {'erupt': Card(9, 0, 2, 'Erupt', ['wrath']),
              'crush joints': Card(10, 0, 1, 'Crush joints',['vulnerable']),
              'consecrate': Card(5, 0, 0, 'Consecrate', ['all']),
              'cut through fate': Card(7, 0, 1, 'Cut through fate', []),
-             'empty body': Card(0, 7, 1, 'Empty body', ['exit stance']),
+             'empty body': Card(0, 7, 1, 'Empty body', ['exit stance']),\
              'empty fist': Card(7, 0, 1, 'Empty fist', ['exit stance']),
-             'empty mind': Card(0, 0, 1, 'Empty mind', ['exit stance']),
+             'empty mind': Card(0, 0, 0, 'Empty mind', ['exit stance']),
              'evaluate': Card(0, 0, 1, 'Evaluate', []),
              'follow up': Card(7, 0, 1, 'Follow up', ['gain mana']),
              'pressure points': Card(8, 0, 1, 'Pressure points', ['all']),
@@ -153,8 +153,8 @@ roguecardsdict = {'neutralise': Card(5, 0, 1, 'Neutralise', ['weak']),
              'all out attack': Card(14, 0, 3, 'All out attack', ['all'])}
 
 
-enemycardsdict = {'snail strike': Card(80, 0, 0, 'Snail Strike', []),
-                 'incantation': Card(80, 0, 0, 'Snail Incantation', ['snailritual']),
+enemycardsdict = {'snail strike': Card(6, 0, 0, 'Snail Strike', []),
+                 'incantation': Card(0, 0, 0, 'Snail Incantation', ['snailritual']),
                  'chomp': Card(11, 0, 0, 'Snail Chomp', []),
                  'thrash': Card(7, 5, 0, 'Snail Thrash', []),
                  'bellow': Card(3, 6, 0, 'Snail Bellow', []),
@@ -165,7 +165,7 @@ enemycardsdict = {'snail strike': Card(80, 0, 0, 'Snail Strike', []),
                  'corrosivespit': Card(7, 0, 0, 'Corrosive Spit', ['snailspit']),
                  'tacklesspike': Card(5, 0, 0, 'Tackle', []),
                  'spiketackle': Card(8, 0, 0, 'Spike Tackle', ['snailspit']),
-                 'torntosnails': Card(15, 0, 0, 'Snail Shot', ['twice']),
+                 'torntosnails': Card(15, 0, 0, 'Torn to Snails!', ['twice']),
                  'iwillhaveshell': Card(3, 8, 0, 'I will have shell', ['snailgrow']),
                  'snailspace': Card(8, 3, 0, "Snail Space!", ['snailweak'])}
 
@@ -224,28 +224,40 @@ def twice(actor):
   return
 
 def calm(actor):
-  if actor.conditions['exit stance'] != None:
-    actor.conditions['exit stance'] = 0
-  if actor.conditions['wrath'] != None:
-    actor.conditions['wrath'] = 0
+  new_dict = {}
+  conditions = list(actor.conditions)[::-1]
+  for condition in conditions:
+    if condition in ['exit stance', 'wrath']:
+      actor.conditions[condition] = 0
+    else:
+      new_dict[condition] = actor.conditions[condition]
   actor.conditions['calm'] = 3
   actor.takedamagemult *= 0.5
   return
 
 def wrath(actor):
-  if actor.conditions['exit stance'] != None:
-    actor.conditions['exit stance'] = 0
-  if actor.conditions['calm'] != None:
-    actor.conditions['calm'] = 0
+  new_dict = {}
+  conditions = list(actor.conditions)[::-1]
+  for condition in conditions:
+    if condition in ['exit stance', 'calm']:
+      actor.conditions[condition] = 0
+    else:
+      new_dict[condition] = actor.conditions[condition]
+  actor.conditions['wrath'] = 7
+  actor.conditions = new_dict
   actor.takedamagemult *= 2
   actor.damagemult *= 2
   return
 
 def exit_stance(actor):
-  if actor.conditions['calm'] != None:
-    actor.conditions['calm'] = 0
-  if actor.conditions['wrath'] != None:
-    actor.conditions['wrath'] = 0
+  new_dict = {}
+  conditions = list(actor.conditions)[::-1]
+  for condition in conditions:
+    if condition in ['wrath', 'calm']:
+      actor.conditions[condition] = 0
+    else:
+      new_dict[condition] = actor.conditions[condition]
+  actor.conditions['exit stance'] = 0
   actor.takedamagemult = 1
   actor.damagemult = 1
   return
@@ -275,8 +287,8 @@ def snail_weak(actor):
   return
 
 def drain(actor):
-  player.hp -= 3
-  player.mana += 2
+  actor.hp -= 3
+  actor.mana += 2
   return
 
 def gain_mana(actor):
@@ -287,10 +299,10 @@ def copy(actor):
   while True:
     print("Choose a card to copy")
     chosen_card = input().lower()
-    if chosen_card not in player.hand:
+    if chosen_card not in actor.hand:
       print("Stop trying to make shit up")
     else:
-      player.hand.append(chosen_card)
+      actor.hand.append(chosen_card)
       break
   return
 
