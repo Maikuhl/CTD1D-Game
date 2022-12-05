@@ -201,7 +201,7 @@ def player_turn(player, enemy_list):
   print(start_divider)
   print("{}'s turn".format(player.name))
   print(start_divider)
-  options = ['play_card', 'card_descriptions', 'inspect', 'end_turn']
+  options = [  ]
   display = display_options(options)
   player.mana = player.maxmana
 

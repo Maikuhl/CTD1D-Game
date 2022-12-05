@@ -42,11 +42,13 @@ class Snail():
       self.moveset.append('iwillhaveshell')
       self.moveset.append('torntosnails')
 
-  def turn(self, card, other):
-    move = self.moveset[randint(0, len(self.moveset)-1)]
-    effects = card.card_activation()
-    other.hp -= effects[0]
-    self.block += effects[1]
+""" DEPRECATED
+    def turn(self, card, other):
+      move = self.moveset[randint(0, len(self.moveset)-1)]
+      effects = card.card_activation()
+      other.hp -= effects[0]
+      self.block += effects[1]
+"""
 
   def add_conditions(self, card_obj):
     for condition, tags in card_obj.effectandtags.items():

@@ -85,7 +85,7 @@ class Card():
 
 
 effectdict = {'all': ['all enemies receive damage', {'condition': False, 'turns': 0}],
-             'flex': ['player deals 1 extra damage', {'condition': True, 'turns': 1}],
+             'flex': ['player deals 1 extra damage', {'condition': True, 'turns': 3}],
              'twice': ['player deals 200% damage', {'condition': False, 'turns': 0}],
              'calm': ['player receives 50% damage', {'condition': True, 'turns': 3}],
              'wrath': ['player deals 200% damage, player receives 200% damage', {'condition': True, 'turns': 3}],
@@ -126,7 +126,7 @@ magecardsdict = {'erupt': Card(9, 0, 2, 'Erupt', ['wrath']),
              'cut through fate': Card(7, 0, 1, 'Cut through fate', []),
              'empty body': Card(0, 7, 1, 'Empty body', ['exit stance']),\
              'empty fist': Card(7, 0, 1, 'Empty fist', ['exit stance']),
-             'empty mind': Card(0, 0, 0, 'Empty mind', ['exit stance']),
+             'empty mind': Card(0, 0, -1, 'Empty mind', ['exit stance']),
              'evaluate': Card(0, 0, 1, 'Evaluate', []),
              'follow up': Card(7, 0, 1, 'Follow up', ['gain mana']),
              'pressure points': Card(8, 0, 1, 'Pressure points', ['all']),
@@ -151,7 +151,6 @@ roguecardsdict = {'neutralise': Card(5, 0, 1, 'Neutralise', ['weak']),
              'piercing wail': Card(10, 0, 2, 'Piercing wail', ['weak']),
              'poisoned stab': Card(6, 0, 1, 'Poisoned stab', ['poison']),
              'all out attack': Card(14, 0, 3, 'All out attack', ['all'])}
-
 
 enemycardsdict = {'snail strike': Card(6, 0, 0, 'Snail Strike', []),
                  'incantation': Card(0, 0, 0, 'Snail Incantation', ['snailritual']),
@@ -283,7 +282,7 @@ def snail_grow(actor):
   return
 
 def snail_weak(actor):
-  weak(actor)
+  actor.damagemult *= 0.75
   return
 
 def drain(actor):
