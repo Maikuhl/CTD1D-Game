@@ -311,9 +311,11 @@ def gain_mana(actor):
 
 def copy(actor):
     while True:
-        print("Choose a card to copy")
+        print("Choose a card to copy or skip")
         chosen_card = input().lower()
-        if chosen_card not in actor.hand:
+        if chosen_card == 'skip':
+            break
+        elif chosen_card not in actor.hand:
             print("Stop trying to make shit up")
         else:
             actor.hand.append(chosen_card)
