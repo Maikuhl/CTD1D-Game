@@ -16,8 +16,22 @@ from ASCII_Art import *
 
 def main():
 
-    welcome()
+    while True:
+
+        start = welcome()
+        cont = start
+        run_game = cont
+        if start:
+            while cont:
+                if run_game:
+                    run_game = start_game()
+                else:
+                    cont = death()
+                    run_game = cont
+        else:
+            return
     return
 
 
 main()
+

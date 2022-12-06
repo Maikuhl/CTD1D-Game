@@ -29,7 +29,7 @@ def choose_class():
                 elif let_me_see == 'rogue':
                     print("The Silent is one of three playable characters in Molluscophobia. She is a huntress themed on a rogue fantasy build. This cunning character weakens her foes with numerous cuts and poison, while using cheap tricks and agility to avoid their attacks. With many powerful cards that draw and discard, the Silent ensures that she will always be one step ahead of her enemy. She starts with a relatively low 70 hp.")
             if cmd in ['tank', 'mage', 'rogue']:
-                return classes[cmd.lower()]
+                return copy(classes[cmd.lower()])
 
 
 def choose_stage(player, stage_count):
@@ -39,21 +39,21 @@ def choose_stage(player, stage_count):
     if stage_count % 9 == 0 or stage_count % 9 == 1:
         stage_choices.append('combat')
         choice = choose_stage_prompt(stage_choices)
-        take_me_there(player, choice, stage_count)
-        return 1
+        advance = take_me_there(player, choice, stage_count)
+        return advance
     elif stage_count % 9 == 8:
         stage_choices.append('rest')
         choice = choose_stage_prompt(stage_choices)
-        take_me_there(player, choice, stage_count)
-        return 1
+        advance = take_me_there(player, choice, stage_count)
+        return advance
     else:
         how_many_stages = randint(1, 3)
         for i in range(how_many_stages):
             stage_choices.append(
                 choices(stage_type, weights=(70, 10, 10, 10), k=1)[0])
         choice = choose_stage_prompt(stage_choices)
-        take_me_there(player, choice, stage_count)
-        return 1
+        advance = take_me_there(player, choice, stage_count)
+        return advance
 
 
 def choose_stage_prompt(stage_choice_list):
@@ -92,11 +92,12 @@ def rest(player):
             break
         elif choice == 'skip':
             break
-    return
+    return True
 
 
 def treasure(player):
     choose_card_reward(player)
+    return True
 
 
 def choose_card_reward(player):
@@ -152,7 +153,7 @@ def shop(player):
             elif cmd1 == "yes":
                 pass
             else:
-                return
+                return True
         elif cmd == 'health':
             while True:
                 try:
@@ -175,7 +176,7 @@ def shop(player):
             elif cmd1 == "yes":
                 pass
             else:
-                return
+                return True
         else:
             while True:
                 try:
@@ -198,7 +199,7 @@ def shop(player):
             elif cmd1 == "yes":
                 pass
             else:
-                return
+                return True
 
 
 def player_turn(player, enemy_list):
@@ -313,7 +314,7 @@ def combat(player, stage_power):
         if enemy_list == []:
             break
         if defeated(player):
-            return death()
+            return False
         elif turn:
             player.draw_card(1)
             player_turn(player, enemy_list)
@@ -322,7 +323,7 @@ def combat(player, stage_power):
             enemy_turn(player, enemy_list)
             turn = swap_turn(turn)
     choose_card_reward(player)
-    return
+    return True
 
 
 def spawn_enemies(stage_power):
@@ -368,6 +369,7 @@ def card_play(actor, enemy_list, card):
             actor.discard_card(card)
     else:
         add_block(actor, card_obj)
+        actor.mana -= card_obj.mana
         actor.add_conditions(card_obj)
         actor.discard_card(card)
         apply_conditions(actor)
@@ -521,9 +523,9 @@ def death():
         if choice not in options:
             print("u are dead stop trying things")
         elif choice == 'yes':
-            return start_game()
+            return True
         elif choice == 'no':
-            return welcome()
+            return False
 
 
 def start_game():
@@ -532,13 +534,16 @@ def start_game():
     player.name = input("What is your name adventurer?\n")
     player.start_deck()
     stage_count = 1
-    while True:
+    running = True
+    while running:
         if stage_count < 10 and stage_count % 2 == 1:
             story_list[stage_count // 2]()
-        stage_count += choose_stage(player, stage_count)
+        running = choose_stage(player, stage_count)
+        stage_count += 1
         print(stage_divider)
         print("You move on to the next stage")
         print(stage_divider)
+    return running
 
 
 def welcome():
@@ -547,7 +552,6 @@ def welcome():
     print(to_print)
     sleep(2)
     print(molluscophobia)
-    print(snail)
     options = ['start_game', 'quit']
     sleep(1)
     while True:
@@ -557,7 +561,7 @@ def welcome():
             print("please try again")
         else:
             if cmd == 'start_game':
-                start_game()
+                return True
             elif cmd == 'quit':
-                quit()
+                return False
     return

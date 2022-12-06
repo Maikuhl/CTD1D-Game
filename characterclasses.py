@@ -74,6 +74,8 @@ class Character():
         return
 
     def draw_card(self, value):
+        if len(self.hand) > 7:
+            return
         if self.deckinplay == []:
             self.deckinplay = self.graveyard[:]
             self.graveyard = []
