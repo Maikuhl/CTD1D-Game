@@ -36,3 +36,5 @@ This game requires the following libraries installed:
 2. Random
 3. Time
 4. Copy
+
+Enjoy our game!
