@@ -16,8 +16,8 @@ from ASCII_Art import *
 
 def main():
 
-  start_game()
-  return
+    welcome()
+    return
 
 
 main()
