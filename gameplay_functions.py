@@ -547,6 +547,7 @@ def welcome():
     print(to_print)
     sleep(2)
     print(molluscophobia)
+    print(snail)
     options = ['start_game', 'quit']
     sleep(1)
     while True:
